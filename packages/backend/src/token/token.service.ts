@@ -10,12 +10,13 @@ export class TokenService {
     private readonly tokenRepository: Repository<Token>,
   ) {}
 
-  async createToken(userId: number, accessToken: string, refreshToken: string): Promise<void> {
+  async createToken(userId: number, accessToken: string, refreshToken: string): Promise<any> {
     const token = new Token();
     token.userId = userId;
     token.accessToken = accessToken;
     token.refreshToken = refreshToken;
     await this.tokenRepository.save(token);
+    return token
   }
 
   async updateAccessToken(userId: number, accessToken: string): Promise<void> {

@@ -38,15 +38,15 @@ export class AuthService {
         try {
             const payload = this.jwtService.verify(refreshToken) as JwtPayload;
             const user = await this.userService.findUser(payload.username);
-            this.tokenService.updateAccessToken(user.id, refreshToken);
-
+           
             if (!user) {
                 throw new UnauthorizedException();
             }
 
-            console.log(user)
-            const tokens = await this.login(user);
-            return tokens
+        
+            await this.tokenService.updateAccessToken(user.id, refreshToken);
+
+            return this.login(user);
         } catch (e) {
             throw new UnauthorizedException();
         }

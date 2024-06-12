@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserDto } from '@dto/user.dto';
 import { JwtAuthGuard } from '../guard/auth.guard';
@@ -14,7 +14,11 @@ export class UserController {
 
     @UseGuards(JwtAuthGuard)
     @Get('profile')
-    async getProfile(@Body() userDto: UserDto) {
+    async getProfile(@Body() userDto: UserDto, @Req() req: Request) {
+        const token = req.headers['authorization'];
+        if (!token) {
+            return UnauthorizedException
+        }
         return this.userService.findUser(userDto.username);
     }
 }
