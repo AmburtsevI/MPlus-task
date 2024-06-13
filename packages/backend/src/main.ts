@@ -21,7 +21,7 @@ async function bootstrap() {
   app.setGlobalPrefix(globalPrefix);
 
   await app.listen(port);
-  
+
   Logger.log(`Running on http://localhost:${port}/${globalPrefix}`);
 }
 bootstrap();

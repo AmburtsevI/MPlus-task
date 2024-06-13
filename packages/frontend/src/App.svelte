@@ -1,26 +1,11 @@
 <script lang="ts">
-
-
-const formData = {
-  email: '',
-  password: "",
-}
-
-
-const handleSubmit = async (e: Event) => {
-  
-}
-
+  import Auth from './pages/Auth.svelte';
+  import Home from './pages/Home.svelte';
+  import SidePanel from './components/SidePanel.svelte'
 </script>
 
-<main>
-  <form on:submit={handleSubmit}>
-    <input type="text" placeholder="Login" />
-    <input type="password" placeholder="Password" />
-    <button type="submit">Submit</button>
-  </form>
-</main>
-
+<!-- <Auth /> -->
+<Home />
+<SidePanel />
 <style>
-
 </style>

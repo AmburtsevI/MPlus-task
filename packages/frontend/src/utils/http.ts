@@ -5,36 +5,33 @@ import axios, {
   type AxiosError,
   type AxiosRequestConfig,
 } from 'axios';
+import { accessToken } from '../stores/auth';
+import { get } from 'svelte/store';
 
-interface RefreshTokenResponse {
-  accessToken: string;
-}
-
-const axiosInstance = axios.create({
+export const axiosInstance = axios.create({
   baseURL: 'http://localhost:5115/api',
   withCredentials: true,
 });
 
 axiosInstance.interceptors.request.use(
   (httpConfig: InternalAxiosRequestConfig) => {
-    if (!localStorage.getItem('token')) {
-      throw new Error('No token');
+    const token = get(accessToken);
+    if (token) {
+      httpConfig.headers = {
+        ...httpConfig.headers,
+        Authorization: `Bearer ${token}`,
+      } as AxiosRequestHeaders;
     }
-
-    httpConfig.headers = {
-      ...httpConfig.headers,
-      Authorization: `Bearer ${localStorage.getItem('token')}`,
-    } as AxiosRequestHeaders;
-
     return httpConfig;
   },
+  (error) => Promise.reject(error),
 );
 
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => {
     return response;
   },
-  async (error: AxiosError): Promise<AxiosResponse | Promise<never>> => {
+  async (error: AxiosError): Promise<AxiosResponse | never> => {
     const request: AxiosRequestConfig & { _retry?: boolean } = error.config!;
     const status = error.response?.status;
 
@@ -42,12 +39,12 @@ axiosInstance.interceptors.response.use(
       request._retry = true;
 
       try {
-        const { data } = await axiosInstance.post<RefreshTokenResponse>(
+        const { data } = await axiosInstance.post(
           '/auth/refresh',
           {},
           { withCredentials: true },
         );
-        localStorage.setItem('token', data.accessToken);
+        localStorage.setItem('token', data);
 
         return axiosInstance.request(request);
       } catch (err) {

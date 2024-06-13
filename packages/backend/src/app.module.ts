@@ -3,7 +3,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
-import { TokenModule } from 'token/token.module';
+import { TokenModule } from './token/token.module';
+import { HouseModule } from './house/house.module';
 
 @Module({
   imports: [
@@ -12,21 +13,21 @@ import { TokenModule } from 'token/token.module';
       imports: [ConfigModule],
       name: 'smartHome',
       useFactory: (configService: ConfigService) => ({
-          type: 'postgres',
-          host: configService.get('DB_HOST'),
-          port: configService.get('DB_PORT'),
-          username: configService.get('DB_USERNAME'),
-          password: configService.get('DB_PASS'),
-          database: configService.get('DB_NAME'),
-          entities: [__dirname + '/**/*.entity{.ts,.js}'],
-          synchronize: true,  
+        type: 'postgres',
+        host: configService.get('DB_HOST'),
+        port: configService.get('DB_PORT'),
+        username: configService.get('DB_USERNAME'),
+        password: configService.get('DB_PASS'),
+        database: configService.get('DB_NAME'),
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        synchronize: true,
       }),
       inject: [ConfigService],
     }),
     AuthModule,
     UserModule,
     TokenModule,
+    HouseModule,
   ],
 })
 export class AppModule {}
-  
