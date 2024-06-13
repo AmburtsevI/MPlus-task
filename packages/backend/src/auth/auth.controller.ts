@@ -14,11 +14,23 @@ export class AuthController {
   ) {
     const user = await this.authService.validateUser(userDto);
     const { accessToken, refreshToken } = await this.authService.login(user);
+    if (!accessToken && !refreshToken) {
+      res.json({
+        status: 0,
+        message: 'Unauthorized',
+      });
+    }
     res.cookie('refreshToken', refreshToken, {
       maxAge: 7 * 24 * 60 * 60 * 1000,
       httpOnly: true,
     });
-    res.json(accessToken);
+    res.json({
+      status: 1,
+      message: {
+        accessToken: accessToken,
+        user: user,
+      },
+    });
   }
 
   @Post('refresh')

@@ -12,6 +12,9 @@ export class Device {
   @Column()
   type: string;
 
+  @Column('jsonb')
+  params: Record<string, string | boolean>;
+
   @ManyToOne(() => Room, (room) => room.devices)
   room: Room;
 }

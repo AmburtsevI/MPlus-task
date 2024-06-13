@@ -5,8 +5,6 @@ import axios, {
   type AxiosError,
   type AxiosRequestConfig,
 } from 'axios';
-import { accessToken } from '../stores/auth';
-import { get } from 'svelte/store';
 
 export const axiosInstance = axios.create({
   baseURL: 'http://localhost:5115/api',
@@ -15,7 +13,8 @@ export const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   (httpConfig: InternalAxiosRequestConfig) => {
-    const token = get(accessToken);
+    const token = localStorage.getItem('token');
+    console.log(1)
     if (token) {
       httpConfig.headers = {
         ...httpConfig.headers,
@@ -24,17 +23,19 @@ axiosInstance.interceptors.request.use(
     }
     return httpConfig;
   },
-  (error) => Promise.reject(error),
+  (error) => {
+    Promise.reject(error)
+  },
 );
 
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => {
+    console.log(2)
     return response;
   },
   async (error: AxiosError): Promise<AxiosResponse | never> => {
     const request: AxiosRequestConfig & { _retry?: boolean } = error.config!;
     const status = error.response?.status;
-
     if (status === 401 && request && !request._retry) {
       request._retry = true;
 

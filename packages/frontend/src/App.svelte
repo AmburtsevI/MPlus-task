@@ -1,11 +1,14 @@
 <script lang="ts">
-  import Auth from './pages/Auth.svelte';
-  import Home from './pages/Home.svelte';
-  import SidePanel from './components/SidePanel.svelte'
+  import Router from './router/Router.svelte';
+  import AuthContext from './stores/AuthContext.svelte';
+  import "smelte/src/tailwind.css";
 </script>
 
-<!-- <Auth /> -->
-<Home />
-<SidePanel />
+<AuthContext>
+  <Router />
+</AuthContext>
+
+<!-- <Home />
+<SidePanel /> -->
 <style>
 </style>
