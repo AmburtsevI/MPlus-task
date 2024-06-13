@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import floor from '../assets/floor.png';
   import SidePanel from '../components/SidePanel.svelte';
+  import Light from '../components/deviceInterfaces/Light.svelte';
 
   let devices = [];
   let image: HTMLImageElement;
@@ -44,7 +45,9 @@
         on:click={() => openMenu = device.id}
       >
         <img src={device.svg} alt={device.name} class="icon"/>
-        
+        <div class="control-menu">
+          <Light />
+        </div>
       </div>
     {/if}
   {/each}
@@ -70,6 +73,27 @@
       box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
       backdrop-filter: blur(10.2px);
 
+      .control-menu {
+        position: absolute;
+        width: 160px;
+        height: fit-content;
+        background-color: #232323;
+        left: 55px;
+        height: fit-content;
+        padding: 5px 10px 10px 10px;
+        border-radius: 10px;
+
+        &::before {
+          content: '';
+          position: absolute;
+          width: 10px;
+          height: 10px;
+          left: -5px;
+          top: 50%;
+          transform: translateY(-50%) rotate(45deg);
+          background-color: #232323;
+        }
+      }
       .icon {
         width: 30px;
       }

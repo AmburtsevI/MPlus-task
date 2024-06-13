@@ -1,5 +1,5 @@
 const config = {
-    content: ['./src/**/*.{html,js,svelte,ts}', './node_modules/flowbite-svelte/**/*.{html,js,svelte,ts}'],
+    content: ['./src/**/*.{html,js,svelte,ts}', './node_modules/flowbite-svelte/**/*.{html,js,svelte,ts}', "./node_modules/flowbite/**/*.js"],
   
     plugins: [require('flowbite/plugin')],
   
@@ -15,7 +15,7 @@ const config = {
             200: '#FFE4DE',
             300: '#FFD5CC',
             400: '#FFBCAD',
-            500: '#FE795D',
+            500: 'transparent',
             600: '#EF562F',
             700: '#EB4F27',
             800: '#CC4522',
