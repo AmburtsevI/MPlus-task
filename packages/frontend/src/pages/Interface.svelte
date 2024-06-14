@@ -1,9 +1,11 @@
 <script lang="ts">
     import SidePanel from "../components/SidePanel.svelte";
+    import InfoPanel from "../components/InfoPanel.svelte";
 </script>
 
 <div class="wrapper">
     <SidePanel />
+    <InfoPanel />
 </div>
 
 <style lang="scss">
@@ -13,5 +15,6 @@
         bottom: 0;
         width: 100%;
         display: flex;
+        justify-content: space-between;
     }
 </style>

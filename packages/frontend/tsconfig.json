@@ -10,6 +10,6 @@
     "isolatedModules": true,
     "types":["svelte"]
   },
-  "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.svelte"],
+  "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.svelte", "custom-events.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

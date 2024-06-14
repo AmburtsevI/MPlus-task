@@ -13,8 +13,11 @@ export class Device {
   type: string;
 
   @Column('jsonb')
-  params: Record<string, string | boolean>;
+  position: Record<string, number>;
+
+  @Column('jsonb')
+  params: Record<string, string | boolean | number>;
 
   @ManyToOne(() => Room, (room) => room.devices)
-  room: Room;
+  room: Room | null;
 }

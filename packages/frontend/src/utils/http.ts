@@ -14,7 +14,6 @@ export const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (httpConfig: InternalAxiosRequestConfig) => {
     const token = localStorage.getItem('token');
-    console.log(1)
     if (token) {
       httpConfig.headers = {
         ...httpConfig.headers,
@@ -30,7 +29,6 @@ axiosInstance.interceptors.request.use(
 
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => {
-    console.log(2)
     return response;
   },
   async (error: AxiosError): Promise<AxiosResponse | never> => {

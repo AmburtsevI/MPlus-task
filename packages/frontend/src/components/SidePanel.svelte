@@ -1,40 +1,23 @@
 <script lang="ts">
-  import light from '../assets/devices/light.svg';
-  import thermostat from '../assets/devices/thermostat.svg';
-  import conditioner from '../assets/devices/conditioner.svg';
-  import door from '../assets/devices/door.svg';
-  import fan from '../assets/devices/fan.svg';
-  import heating from '../assets/devices/heating.svg';
-  import leak from '../assets/devices/leak.svg';
-  import socket from '../assets/devices/socket.svg';
-  import swiitch from '../assets/devices/switch.svg';
-  import window from '../assets/devices/window.svg';
   import arrow from '../assets/arrow.svg';
+  import { clickoutside } from '../utils/clickOutside';
+  import { axiosInstance } from '../utils/http';
+  import { devicesStore, updateDevices } from '../stores/devicesStore';
+  import { onDestroy, onMount } from 'svelte';
+  import { deviceIcon } from '../utils/devices';
 
   let show = false;
-
-  let devices = [
-    { id: 1, type: 'light', room: '', name: 'Свет', coordinates: null, svg: light },
-    { id: 2, type: 'thermostat', room: '', name: 'Термостат', coordinates: null, svg: thermostat },
-    { id: 3, type: 'conditioner', room: '', name: 'Кондиционер', coordinates: null, svg: conditioner },
-    { id: 4, type: 'door', room: '', name: 'Дверь', coordinates: null, svg: door },
-    { id: 5, type: 'fan', room: '', name: 'Вентилятор', coordinates: null, svg: fan },
-    { id: 6, type: 'heating', room: '', name: 'Обогрев', coordinates: null, svg: heating },
-    { id: 7, type: 'leak', room: '', name: 'Вода', coordinates: null, svg: leak },
-    { id: 8, type: 'socket', room: '', name: 'Розетка', coordinates: null, svg: socket },
-    { id: 9, type: 'switch', room: '', name: 'Выключатель', coordinates: null, svg: swiitch },
-    { id: 10, type: 'window', room: '', name: 'Окно', coordinates: null, svg: window },
-  ];
+  let dragged: number | null = null;
+  let unsub;
 
   const handleDragStart = (event: DragEvent, device: any) => {
     if (!event.dataTransfer) {
       return;
     }
+
+    dragged = device.id;
     const imageEl = createImage(device.svg);
-
-    console.log(imageEl);
     if (imageEl) event.dataTransfer.setDragImage(imageEl, 30, 30);
-
     event.dataTransfer.setData('device', JSON.stringify(device));
   };
 
@@ -50,6 +33,26 @@
     return img;
   };
 
+  const fetchDevices = async () => {
+    try {
+      const { data } = await axiosInstance.get('/device/findAllCustomDevices');
+      if (data) {
+        updateDevices(data);
+      }
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  onMount(() => {
+    fetchDevices();
+  });
+
+  unsub = devicesStore.subscribe(() => {});
+
+  onDestroy(() => {
+    unsub();
+  });
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -58,15 +61,26 @@
   <img class="arrow" src={arrow} alt="arrow" />
   <span class="text">Устройства</span>
 </div>
-<div class="side-panel" class:active={show}>
-  {#each devices as device}
+<div
+  class="side-panel"
+  class:active={show}
+  use:clickoutside
+  on:outclick={() => (show = false)}
+>
+  Drag&drop your device
+  {#each $devicesStore as device}
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div
       class="device-item"
       draggable="true"
+      class:dragged={dragged === device.id}
       on:dragstart={(event) => handleDragStart(event, device)}
+      on:dragend={() => (dragged = null)}
     >
-      <img src={device.svg} alt={device.name} />
+      <img
+        src={deviceIcon(device.type.toString())}
+        alt={device.name.toString()}
+      />
       <span>{device.name}</span>
     </div>
   {/each}
@@ -95,7 +109,7 @@
     .text {
       width: 0;
       overflow: hidden;
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 600;
       transition: 0.3s ease;
       cursor: inherit;
@@ -103,12 +117,14 @@
     }
 
     .arrow {
+      width: 35px;
+      height: 35px;
       transition: 0.3s ease;
       cursor: inherit;
     }
 
     &:hover {
-      width: 150px;
+      width: 160px;
       border-radius: 15px;
       padding: 0 10px 0 10px;
 
@@ -134,14 +150,16 @@
     }
   }
   .side-panel {
-    position: absolute;
+    position: relative;
     top: 50%;
+    text-align: center;
     transform: translateY(-50%);
     border-radius: 0 10px 10px 0;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     padding: 0px;
+    font-size: 13px;
     box-sizing: border-box;
     overflow-y: scroll;
     overflow-x: hidden;
@@ -150,7 +168,7 @@
     width: 0;
     max-height: 600px;
     z-index: 10;
-    transition: 0.5s ease;
+    transition: 0.3s ease;
 
     &.active {
       width: 120px;
@@ -184,7 +202,13 @@
       height: 100px;
       justify-content: space-around;
       align-items: center;
-      word-wrap: normal;
+      cursor: grab;
+      transition: 0.3s ease;
+
+      &.dragged {
+        background-color: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+      }
 
       img {
         width: 40px;

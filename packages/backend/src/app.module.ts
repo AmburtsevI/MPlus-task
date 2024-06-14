@@ -5,6 +5,8 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { TokenModule } from './token/token.module';
 import { HouseModule } from './house/house.module';
+import { RoomModule } from './room/room.module';
+import { DeviceModule } from './device/device.module';
 
 @Module({
   imports: [
@@ -28,6 +30,8 @@ import { HouseModule } from './house/house.module';
     UserModule,
     TokenModule,
     HouseModule,
+    RoomModule,
+    DeviceModule,
   ],
 })
 export class AppModule {}

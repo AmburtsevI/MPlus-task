@@ -13,7 +13,7 @@ export class House {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   tag: string;
 
   @OneToMany(() => Room, (room) => room.house)
