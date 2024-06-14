@@ -9,7 +9,12 @@ import socket from '../assets/devices/socket.svg';
 import swiitch from '../assets/devices/switch.svg';
 import window from '../assets/devices/window.svg';
 import unknown from '../assets/devices/unknown.svg';
-import type { devices, device, deviceInterface, TranslationMap } from '../types/types';
+import type {
+  devices,
+  device,
+  deviceInterface,
+  TranslationMap,
+} from '../types/types';
 
 export const devicesArr: Record<string, string>[] = [
   { type: 'light', name: 'Свет' },
@@ -41,29 +46,34 @@ export const deviceIcon: (type: string) => string = (type: string) => {
   return icons[type] ? icons[type] : unknown;
 };
 
-export const deviceInterfaces: (type: string) => Record<string, string | number | boolean> = (type: string) => {
+export const deviceInterfaces: (
+  type: string,
+) => Record<string, string | number | boolean> = (type: string) => {
   const interfaces: deviceInterface = {
-    light: { active: false, brightness: 0 },
-    thermostat: { active: false, temperature: 0 },
-    conditioner: { active: false, temperature: 0, swing: false },
-    door: { active: false, open: false },
-    fan: { active: false, speed: 0 },
-    heating: { active: false, temperature: 0 },
-    leak: { active: false },
-    socket: { active: false },
-    switch: { active: false },
-    window: { active: false, open: false },
-    unknown: { active: false },
+    light: { brightness: 0 },
+    thermostat: { temperature: 0 },
+    conditioner: { temperature: 0, swing: false },
+    door: { open: false },
+    fan: { speed: 0 },
+    heating: { temperature: 0 },
   };
 
   return interfaces[type] ? interfaces[type] : interfaces['unknown'];
 };
 
-
 export const interfaceTranslation: TranslationMap = {
-    active: 'Вкл/Выкл',
-    brightness: 'Яркость',
-    temperature: 'Температура',
-    open: 'Открыть',
-    speed: 'Скорость',
-}
+  active: 'Вкл/Выкл',
+  brightness: 'Яркость',
+  temperature: 'Температура',
+  open: 'Открыть',
+  speed: 'Скорость',
+  swing: 'Swing',
+};
+
+export const ranges = {
+  light: { min: 0, max: 100 },
+  thermostat: { min: 16, max: 32 },
+  conditioner: { min: 16, max: 32 },
+  fan: { min: 0, max: 100 },
+  heating: { min: 16, max: 32 },
+};

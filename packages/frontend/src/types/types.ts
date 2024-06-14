@@ -19,6 +19,10 @@ export type deviceInterface = Record<
 >;
 
 
-interface TranslationMap {
+export interface TranslationMap {
   [key: string]: string;
+}
+
+export interface RangeConfig {
+  [key: string]: Record<string, number>;
 }
